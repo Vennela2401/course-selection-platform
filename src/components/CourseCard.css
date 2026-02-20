@@ -1,0 +1,131 @@
+.course-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.course-card.has-conflict {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.course-code {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.available {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.full {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.course-name {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.course-info {
+  margin: 1rem 0;
+}
+
+.course-info p {
+  margin: 0.5rem 0;
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.course-info strong {
+  color: #1f2937;
+}
+
+.schedule-info {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.description {
+  margin-top: 0.75rem;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.conflict-warning {
+  background-color: #fef2f2;
+  color: #991b1b;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  margin: 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.course-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
