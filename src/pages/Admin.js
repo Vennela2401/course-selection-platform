@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { useCourses } from "../context/CourseContext";
 
 function Admin() {
-    const { courses = [], addCourse, removeCourse } = useCourses();
+    const courseContext = useCourses();
+
+    const courses = courseContext && courseContext.courses ?
+        courseContext.courses :
+        [];
+
+    const addCourse = courseContext && courseContext.addCourse;
+    const removeCourse = courseContext && courseContext.removeCourse;
 
     const [form, setForm] = useState({
         name: "",
@@ -14,12 +21,17 @@ function Admin() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        if (typeof addCourse !== "function") {
+            alert("addCourse function not available. Check CourseContext.");
+            return;
+        }
+
         const newCourse = {
             id: Date.now(),
             name: form.name,
             day: form.day,
-            start: parseInt(form.start),
-            end: parseInt(form.end),
+            start: Number(form.start),
+            end: Number(form.end),
         };
 
         addCourse(newCourse);
@@ -45,7 +57,13 @@ function Admin() {
         <
         form onSubmit = { handleSubmit }
         style = {
-            { marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" } } >
+            {
+                marginBottom: "20px",
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+            }
+        } >
         <
         input type = "text"
         placeholder = "Course Name"
@@ -68,8 +86,8 @@ function Admin() {
         option > Tuesday < /option> <
         option > Wednesday < /option> <
         option > Thursday < /option> <
-        option > Friday < /option> <
-        /select>
+        option > Friday < /option> < /
+        select >
 
         <
         input type = "number"
@@ -97,8 +115,8 @@ function Admin() {
         button className = "btn primary"
         type = "submit" >
         Add Course <
-        /button> <
-        /form>
+        /button> < /
+        form >
 
         <
         h3 > All Courses < /h3>
@@ -115,8 +133,8 @@ function Admin() {
                 <
                 th > Course < /th> <
                 th > Schedule < /th> <
-                th > Remove < /th> <
-                /tr> <
+                th > Remove < /th> < /
+                tr > <
                 /thead> <
                 tbody > {
                     courses.map((course) => ( <
@@ -129,19 +147,21 @@ function Admin() {
                         <
                         button className = "btn danger"
                         onClick = {
-                            () => removeCourse(course.id) } >
+                            () =>
+                            removeCourse && removeCourse(course.id)
+                        } >
                         Delete <
-                        /button> <
-                        /td> <
+                        /button> < /
+                        td > <
                         /tr>
                     ))
                 } <
-                /tbody> <
-                /table>
+                /tbody> < /
+                table >
             )
         } <
-        /div> <
-        /div>
+        /div> < /
+        div >
     );
 }
 

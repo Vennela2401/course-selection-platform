@@ -1,26 +1,23 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const CourseContext = createContext();
 
-export function CourseProvider({ children }) {
-    const [registeredCourses, setRegisteredCourses] = useState([]);
+export const useCourses = () => useContext(CourseContext);
 
-    const registerCourse = (course) => {
-        setRegisteredCourses([...registeredCourses, course]);
+export const CourseProvider = ({ children }) => {
+    const [courses, setCourses] = useState([]);
+
+    const addCourse = (course) => {
+        setCourses((prev) => [...prev, course]);
     };
 
-    const unregisterCourse = (id) => {
-        setRegisteredCourses(
-            registeredCourses.filter((c) => c.id !== id)
-        );
+    const removeCourse = (id) => {
+        setCourses((prev) => prev.filter((c) => c.id !== id));
     };
 
     return ( <
         CourseContext.Provider value = {
-            { registeredCourses, registerCourse, unregisterCourse } } >
-        { children } <
+            { courses, addCourse, removeCourse } } > { children } <
         /CourseContext.Provider>
     );
-}
-
-export const useCourses = () => useContext(CourseContext);
+};

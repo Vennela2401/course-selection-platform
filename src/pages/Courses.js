@@ -13,13 +13,13 @@ const courseList = [
 ];
 
 function Courses() {
-    const { registeredCourses, registerCourse, unregisterCourse } = useCourses();
+    const { courses, addCourse, removeCourse } = useCourses();
 
     const isRegistered = (id) =>
-        registeredCourses.some((c) => c.id === id);
+        courses.some((c) => c.id === id);
 
     const hasConflict = (newCourse) =>
-        registeredCourses.some(
+        courses.some(
             (c) =>
             c.day === newCourse.day &&
             newCourse.start < c.end &&
@@ -32,8 +32,6 @@ function Courses() {
         h2 > Available Courses < /h2>
 
         <
-        div className = "table-wrapper" >
-        <
         table className = "modern-table" >
         <
         thead >
@@ -41,6 +39,8 @@ function Courses() {
         tr >
         <
         th > Course < /th> <
+        th > Day < /th> <
+        th > Time < /th> <
         th > Action < /th> <
         /tr> <
         /thead>
@@ -51,11 +51,14 @@ function Courses() {
                 tr key = { course.id } >
                 <
                 td > { course.name } < /td> <
+                td > { course.day } < /td> <
+                td > { course.start }: 00 - { course.end }: 00 <
+                /td> <
                 td > {
                     isRegistered(course.id) ? ( <
                         button className = "btn danger"
                         onClick = {
-                            () => unregisterCourse(course.id) } >
+                            () => removeCourse(course.id) } >
                         Unregister <
                         /button>
                     ) : ( <
@@ -65,7 +68,7 @@ function Courses() {
                                 if (hasConflict(course)) {
                                     alert("Schedule conflict detected!");
                                 } else {
-                                    registerCourse(course);
+                                    addCourse(course);
                                 }
                             }
                         } >
@@ -79,7 +82,6 @@ function Courses() {
         } <
         /tbody> <
         /table> <
-        /div> <
         /div>
     );
 }

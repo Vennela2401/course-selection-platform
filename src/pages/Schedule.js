@@ -10,10 +10,10 @@ const timeSlots = [
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 function Schedule() {
-    const { registeredCourses } = useCourses();
+    const { courses } = useCourses();
 
     const getCourseForSlot = (day, slot) => {
-        return registeredCourses.find(
+        return courses.find(
             (c) =>
             c.day === day &&
             c.start === slot.start &&

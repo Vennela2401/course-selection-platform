@@ -1,85 +1,55 @@
-import React from 'react';
-import { useRegistration } from '../context/RegistrationContext';
-import { getAllConflicts } from '../utils/conflictDetection';
-import CourseCard from '../components/CourseCard';
-import './Registration.css';
+import React from "react";
+import { useCourses } from "../context/CourseContext";
 
-const Registration = () => {
-  const { registeredCourses, clearAllRegistrations } = useRegistration();
-  const conflicts = getAllConflicts(registeredCourses);
+function Registration() {
+    const { courses, removeCourse } = useCourses();
 
-  const totalCredits = registeredCourses.reduce((sum, course) => sum + course.credits, 0);
+    return ( <
+        div className = "page-container" >
+        <
+        h2 > My Registered Courses < /h2>
 
-  const handleClearAll = () => {
-    if (window.confirm('Are you sure you want to unregister from all courses?')) {
-      clearAllRegistrations();
-    }
-  };
-
-  return (
-    <div className="registration-page">
-      <div className="registration-header">
-        <h1>My Registrations</h1>
-        <p>Manage your registered courses</p>
-      </div>
-
-      {registeredCourses.length === 0 ? (
-        <div className="no-registrations">
-          <p>You haven't registered for any courses yet.</p>
-          <p>Visit the <a href="/courses">Courses</a> page to register for courses.</p>
-        </div>
-      ) : (
-        <>
-          <div className="registration-summary">
-            <div className="summary-card">
-              <h3>Total Courses</h3>
-              <p className="summary-value">{registeredCourses.length}</p>
-            </div>
-            <div className="summary-card">
-              <h3>Total Credits</h3>
-              <p className="summary-value">{totalCredits}</p>
-            </div>
-            <div className="summary-card">
-              <h3>Conflicts</h3>
-              <p className={`summary-value ${conflicts.length > 0 ? 'has-conflict' : ''}`}>
-                {conflicts.length}
-              </p>
-            </div>
-            <div className="summary-card">
-              <button className="btn btn-danger" onClick={handleClearAll}>
-                Clear All
-              </button>
-            </div>
-          </div>
-
-          {conflicts.length > 0 && (
-            <div className="conflicts-warning">
-              <h3>⚠️ Schedule Conflicts Detected</h3>
-              <p>The following courses have overlapping schedules:</p>
-              <ul>
-                {conflicts.map((conflict, index) => (
-                  <li key={index}>
-                    <strong>{conflict.course1.code}</strong> ({conflict.course1.schedule.days.join(', ')} {conflict.course1.schedule.time}) 
-                    conflicts with 
-                    <strong> {conflict.course2.code}</strong> ({conflict.course2.schedule.days.join(', ')} {conflict.course2.schedule.time})
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className="registered-courses">
-            <h2>Registered Courses ({registeredCourses.length})</h2>
-            <div className="courses-grid">
-              {registeredCourses.map(course => (
-                <CourseCard key={course.id} course={course} showRegisterButton={true} />
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
+        {
+            courses.length === 0 ? ( <
+                p > No courses registered yet. < /p>
+            ) : ( <
+                table className = "modern-table" >
+                <
+                thead >
+                <
+                tr >
+                <
+                th > Course < /th> <
+                th > Day < /th> <
+                th > Time < /th> <
+                th > Action < /th> <
+                /tr> <
+                /thead> <
+                tbody > {
+                    courses.map((course) => ( <
+                        tr key = { course.id } >
+                        <
+                        td > { course.name } < /td> <
+                        td > { course.day } < /td> <
+                        td > { course.start }: 00 - { course.end }: 00 <
+                        /td> <
+                        td >
+                        <
+                        button className = "btn danger"
+                        onClick = {
+                            () => removeCourse(course.id) } >
+                        Remove <
+                        /button> <
+                        /td> <
+                        /tr>
+                    ))
+                } <
+                /tbody> <
+                /table>
+            )
+        } <
+        /div>
+    );
+}
 
 export default Registration;
