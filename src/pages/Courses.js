@@ -11,6 +11,9 @@ const courseList = [{
             { sec: "A", day: "Monday", start: 9, end: 11, seats: 60 },
             { sec: "B", day: "Monday", start: 11, end: 13, seats: 80 },
             { sec: "C", day: "Tuesday", start: 9, end: 11, seats: 40 },
+            { sec: "D", day: "Wednesday", start: 9, end: 11, seats: 55 },
+            { sec: "E", day: "Thursday", start: 14, end: 16, seats: 70 },
+            { sec: "F", day: "Friday", start: 10, end: 12, seats: 65 },
         ],
     },
     {
@@ -22,6 +25,9 @@ const courseList = [{
             { sec: "A", day: "Monday", start: 10, end: 12, seats: 55 },
             { sec: "B", day: "Tuesday", start: 10, end: 12, seats: 80 },
             { sec: "C", day: "Wednesday", start: 10, end: 12, seats: 65 },
+            { sec: "D", day: "Thursday", start: 9, end: 11, seats: 60 },
+            { sec: "E", day: "Friday", start: 11, end: 13, seats: 70 },
+            { sec: "F", day: "Saturday", start: 9, end: 11, seats: 50 },
         ],
     },
     {
@@ -33,6 +39,9 @@ const courseList = [{
             { sec: "A", day: "Tuesday", start: 14, end: 16, seats: 70 },
             { sec: "B", day: "Wednesday", start: 14, end: 16, seats: 80 },
             { sec: "C", day: "Thursday", start: 14, end: 16, seats: 50 },
+            { sec: "D", day: "Monday", start: 9, end: 11, seats: 60 },
+            { sec: "E", day: "Friday", start: 9, end: 11, seats: 65 },
+            { sec: "F", day: "Saturday", start: 10, end: 12, seats: 55 },
         ],
     },
     {
@@ -43,6 +52,10 @@ const courseList = [{
         sections: [
             { sec: "A", day: "Wednesday", start: 9, end: 11, seats: 60 },
             { sec: "B", day: "Thursday", start: 9, end: 11, seats: 80 },
+            { sec: "C", day: "Friday", start: 11, end: 13, seats: 70 },
+            { sec: "D", day: "Monday", start: 14, end: 16, seats: 55 },
+            { sec: "E", day: "Tuesday", start: 14, end: 16, seats: 65 },
+            { sec: "F", day: "Saturday", start: 9, end: 11, seats: 50 },
         ],
     },
     {
@@ -53,6 +66,10 @@ const courseList = [{
         sections: [
             { sec: "A", day: "Thursday", start: 10, end: 12, seats: 60 },
             { sec: "B", day: "Friday", start: 10, end: 12, seats: 80 },
+            { sec: "C", day: "Monday", start: 14, end: 16, seats: 55 },
+            { sec: "D", day: "Tuesday", start: 9, end: 11, seats: 65 },
+            { sec: "E", day: "Wednesday", start: 11, end: 13, seats: 70 },
+            { sec: "F", day: "Saturday", start: 10, end: 12, seats: 50 },
         ],
     },
     {
@@ -63,6 +80,10 @@ const courseList = [{
         sections: [
             { sec: "A", day: "Friday", start: 14, end: 16, seats: 75 },
             { sec: "B", day: "Monday", start: 14, end: 16, seats: 80 },
+            { sec: "C", day: "Tuesday", start: 10, end: 12, seats: 65 },
+            { sec: "D", day: "Wednesday", start: 9, end: 11, seats: 60 },
+            { sec: "E", day: "Thursday", start: 11, end: 13, seats: 70 },
+            { sec: "F", day: "Saturday", start: 9, end: 11, seats: 55 },
         ],
     },
     {
@@ -73,6 +94,10 @@ const courseList = [{
         sections: [
             { sec: "A", day: "Tuesday", start: 9, end: 11, seats: 60 },
             { sec: "B", day: "Wednesday", start: 9, end: 11, seats: 80 },
+            { sec: "C", day: "Thursday", start: 14, end: 16, seats: 65 },
+            { sec: "D", day: "Friday", start: 11, end: 13, seats: 70 },
+            { sec: "E", day: "Monday", start: 10, end: 12, seats: 55 },
+            { sec: "F", day: "Saturday", start: 10, end: 12, seats: 50 },
         ],
     },
     {
@@ -83,6 +108,10 @@ const courseList = [{
         sections: [
             { sec: "A", day: "Wednesday", start: 14, end: 16, seats: 70 },
             { sec: "B", day: "Thursday", start: 14, end: 16, seats: 80 },
+            { sec: "C", day: "Monday", start: 9, end: 11, seats: 60 },
+            { sec: "D", day: "Tuesday", start: 11, end: 13, seats: 65 },
+            { sec: "E", day: "Friday", start: 9, end: 11, seats: 70 },
+            { sec: "F", day: "Saturday", start: 10, end: 12, seats: 50 },
         ],
     },
 ];
@@ -129,7 +158,7 @@ function Courses() {
                 return ( <
                     div key = { course.id }
                     className = "relative bg-white rounded-2xl shadow-lg border overflow-hidden" >
-                    { /* LEFT COLOR STRIP */ } <
+                    <
                     div className = { `absolute left-0 top-0 h-full w-2 ${
                   course.type === "Core"
                     ? "bg-indigo-500"
@@ -204,7 +233,10 @@ function Courses() {
                                     if (totalCredits + course.credits > 24)
                                         return alert("Credit limit exceeded");
 
-                                    addCourse({...course, section: selected });
+                                    addCourse({
+                                        ...course,
+                                        section: selected,
+                                    });
                                 }
                             }
                             className = "bg-green-600 text-white px-6 py-2 rounded-xl" >

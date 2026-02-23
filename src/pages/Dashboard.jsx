@@ -16,15 +16,30 @@ function Dashboard() {
     navigate("/login");
   };
 
-  const today = new Date().toLocaleString("en-US", {
-    weekday: "long",
-  });
+  /* ===============================
+     TODAY'S DAY (SAFE FORMAT)
+  ================================ */
+  const today = new Date()
+    .toLocaleString("en-US", { weekday: "long" })
+    .toLowerCase();
 
+  /* ===============================
+     TODAY'S CLASSES (FIXED LOGIC)
+  ================================ */
   const todaysClasses = courses
-    .filter((c) => c.section?.day === today)
-    .sort((a, b) => a.section?.start - b.section?.start);
+    .filter((c) => {
+      if (!c.section || !c.section.day) return false;
+      return c.section.day.toLowerCase() === today;
+    })
+    .sort(
+      (a, b) => (a.section?.start || 0) - (b.section?.start || 0)
+    );
 
+  /* ===============================
+     CREDITS
+  ================================ */
   const maxCredits = 24;
+
   const totalCredits = courses.reduce(
     (sum, c) => sum + (c.credits || 0),
     0
@@ -35,9 +50,10 @@ function Dashboard() {
     (totalCredits / maxCredits) * 100
   );
 
-  const notificationCount =
-    todaysClasses.length +
-    (totalCredits >= maxCredits ? 1 : 0);
+  /* ===============================
+     NOTIFICATIONS
+  ================================ */
+  const notificationCount = todaysClasses.length;
 
   return (
     <div
@@ -49,7 +65,9 @@ function Dashboard() {
     >
       <div className="max-w-6xl mx-auto px-6">
 
-        {/* TOP BAR */}
+        {/* ===============================
+            TOP BAR
+        ================================ */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-indigo-600">
             🎓 Student Dashboard
@@ -72,7 +90,9 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* PROFILE SECTION (UPDATED - NO BLACK) */}
+        {/* ===============================
+            PROFILE CARD
+        ================================ */}
         <div
           className={`flex items-center gap-4 mb-8 p-6 rounded-xl shadow transition ${
             darkMode
@@ -94,7 +114,9 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* STATS */}
+        {/* ===============================
+            STATS
+        ================================ */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           {[
             {
@@ -134,7 +156,9 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* CREDIT PROGRESS */}
+        {/* ===============================
+            CREDIT UTILIZATION
+        ================================ */}
         <div
           className={`p-6 rounded-xl shadow mb-8 ${
             darkMode ? "bg-gray-800" : "bg-white"
@@ -156,7 +180,9 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* TODAY'S SCHEDULE */}
+        {/* ===============================
+            TODAY'S CLASSES
+        ================================ */}
         <div
           className={`p-6 rounded-xl shadow mb-8 ${
             darkMode ? "bg-gray-800" : "bg-white"
@@ -191,7 +217,9 @@ function Dashboard() {
           )}
         </div>
 
-        {/* QUICK ACTIONS */}
+        {/* ===============================
+            QUICK ACTIONS
+        ================================ */}
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
             <h3 className="font-semibold text-blue-700 mb-3">
