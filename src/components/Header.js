@@ -71,15 +71,16 @@ const Header = () => {
     };
 
     return ( <
-        > { /* ===== HEADER ===== */ } <
+        >
+        { /* ===== HEADER ===== */ } <
         header className = "header" >
         <
         div className = "header-left" > {
             user && ( <
                 span className = "hamburger"
                 onClick = {
-                    () => setSidebarOpen(true) } >
-                ☰
+                    () => setSidebarOpen(true)
+                } > ☰
                 <
                 /span>
             )
@@ -89,8 +90,8 @@ const Header = () => {
         Link to = "/"
         className = "logo" >
         Course Selection Platform <
-        /Link> <
-        /div>
+        /Link> < /
+        div >
 
         { /* ===== HEADER RIGHT ===== */ } {
             user && ( <
@@ -100,8 +101,7 @@ const Header = () => {
                 onClick = {
                     () =>
                     setShowNotifications(!showNotifications)
-                } >
-                🔔{
+                } > 🔔{
                     notifications.length > 0 && ( <
                         span className = "badge" > { notifications.length } <
                         /span>
@@ -125,8 +125,7 @@ const Header = () => {
                             ) : (
                                 notifications.map((note, index) => ( <
                                     div key = { index }
-                                    className = "notification-item" >
-                                    { note } <
+                                    className = "notification-item" > { note } <
                                     /div>
                                 ))
                             )
@@ -145,8 +144,10 @@ const Header = () => {
                 <
                 div className = "overlay"
                 onClick = {
-                    () => setSidebarOpen(false) } >
-                < /div>
+                    () => setSidebarOpen(false)
+                } >
+                <
+                /div>
 
                 <
                 div className = "sidebar" >
@@ -159,8 +160,8 @@ const Header = () => {
                                 "/dashboard"
                             )}` }
                 onClick = {
-                    () => setSidebarOpen(false) } >
-                🏠Dashboard <
+                    () => setSidebarOpen(false)
+                } > 🏠Dashboard <
                 /Link>
 
                 <
@@ -169,8 +170,8 @@ const Header = () => {
                                 "/courses"
                             )}` }
                 onClick = {
-                    () => setSidebarOpen(false) } >
-                📚Courses <
+                    () => setSidebarOpen(false)
+                } > 📚Courses <
                 /Link>
 
                 <
@@ -179,8 +180,8 @@ const Header = () => {
                                 "/schedule"
                             )}` }
                 onClick = {
-                    () => setSidebarOpen(false) } >
-                🗓Schedule <
+                    () => setSidebarOpen(false)
+                } > 🗓Schedule <
                 /Link>
 
                 <
@@ -189,8 +190,8 @@ const Header = () => {
                                 "/profile"
                             )}` }
                 onClick = {
-                    () => setSidebarOpen(false) } >
-                👤Profile <
+                    () => setSidebarOpen(false)
+                } > 👤Profile <
                 /Link>
 
                 {
@@ -200,18 +201,17 @@ const Header = () => {
                                     "/admin"
                                 )}` }
                         onClick = {
-                            () => setSidebarOpen(false) } >
-                        ⚙Admin <
+                            () => setSidebarOpen(false)
+                        } > ⚙Admin <
                         /Link>
                     )
                 }
 
                 <
                 button className = "logout-btn"
-                onClick = { handleLogout } >
-                🚪Logout <
-                /button> <
-                /div> <
+                onClick = { handleLogout } > 🚪Logout <
+                /button> < /
+                div > <
                 />
             )
         } <
