@@ -22,8 +22,8 @@ function Registration() {
                 th > Course < /th> <
                 th > Day < /th> <
                 th > Time < /th> <
-                th > Action < /th> <
-                /tr> <
+                th > Action < /th> < /
+                tr > <
                 /thead> <
                 tbody > {
                     courses.map((course) => ( <
@@ -37,15 +37,16 @@ function Registration() {
                         <
                         button className = "btn danger"
                         onClick = {
-                            () => removeCourse(course.id) } >
+                            () => removeCourse(course.id)
+                        } >
                         Remove <
-                        /button> <
-                        /td> <
+                        /button> < /
+                        td > <
                         /tr>
                     ))
                 } <
-                /tbody> <
-                /table>
+                /tbody> < /
+                table >
             )
         } <
         /div>

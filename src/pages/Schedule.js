@@ -12,12 +12,14 @@ const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 function Schedule() {
     const { courses } = useCourses();
 
+    // UPDATED: Section-level lookup
     const getCourseForSlot = (day, slot) => {
         return courses.find(
             (c) =>
-            c.day === day &&
-            c.start === slot.start &&
-            c.end === slot.end
+            c.section &&
+            c.section.day === day &&
+            c.section.start === slot.start &&
+            c.section.end === slot.end
         );
     };
 
@@ -51,10 +53,16 @@ function Schedule() {
                 {
                     days.map((day) => {
                         const course = getCourseForSlot(day, slot);
+
                         return ( <
                             td key = { day } > {
                                 course ? ( <
                                     span className = "time-badge" > { course.name } <
+                                    br / >
+                                    <
+                                    small >
+                                    Sec { course.section.sec } <
+                                    /small> <
                                     /span>
                                 ) : (
                                     "-"
