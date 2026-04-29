@@ -1,0 +1,15 @@
+com\app\course\model\Registration.class
+com\app\course\service\RegistrationService.class
+com\app\course\config\CorsConfig.class
+com\app\course\service\UserService.class
+com\app\course\controller\AuthController.class
+com\app\course\controller\RegistrationController.class
+com\app\course\controller\CourseController.class
+com\app\course\repository\CourseRepository.class
+com\app\course\model\User.class
+com\app\course\model\Course.class
+com\app\course\service\SafeBCryptPasswordEncoder.class
+com\app\course\repository\UserRepository.class
+com\app\course\CourseSelectionApplication.class
+com\app\course\repository\RegistrationRepository.class
+com\app\course\service\CourseService.class
