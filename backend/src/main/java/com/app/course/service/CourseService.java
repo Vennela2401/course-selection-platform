@@ -3,6 +3,7 @@ package com.app.course.service;
 import com.app.course.model.Course;
 import com.app.course.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class CourseService {
     }
 
     // ================= GET COURSE BY ID =================
-    public Course getCourseById(Long id) {
+    public Course getCourseById(@NonNull Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
     }
 
     // ================= UPDATE COURSE =================
-    public Course updateCourse(Long id, Course courseDetails) {
+    public Course updateCourse(@NonNull Long id, Course courseDetails) {
 
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
@@ -65,7 +66,7 @@ public class CourseService {
     }
 
     // ================= DELETE COURSE =================
-    public void deleteCourse(Long id) {
+    public void deleteCourse(@NonNull Long id) {
 
         if (!courseRepository.existsById(id)) {
             throw new RuntimeException("Cannot delete. Course not found with id: " + id);

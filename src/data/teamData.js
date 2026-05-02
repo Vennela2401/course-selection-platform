@@ -54,3 +54,4 @@ export const teamMembers = [
     image: 'https://via.placeholder.com/200x200?text=Emily+Davis'
   }
 ];
+

@@ -7,6 +7,7 @@ import com.app.course.repository.CourseRepository;
 import com.app.course.repository.RegistrationRepository;
 import com.app.course.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -27,7 +28,7 @@ public class RegistrationService {
 
     private static final int MAX_CREDITS = 20;
 
-    public Registration registerForCourse(Long studentId, Long courseId) {
+    public Registration registerForCourse(@NonNull Long studentId, @NonNull Long courseId) {
 
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -77,14 +78,25 @@ public class RegistrationService {
         return registrationRepository.save(registration);
     }
 
-    public List<Course> getStudentSchedule(Long studentId) {
+    public List<Course> getStudentSchedule(@NonNull Long studentId) {
         return registrationRepository.findByStudentId(studentId)
                 .stream()
                 .map(Registration::getCourse)
                 .collect(Collectors.toList());
     }
 
-    public int getStudentCredits(Long studentId) {
+    @SuppressWarnings("null")
+    public void unregisterFromCourse(@NonNull Long studentId, @NonNull Long courseId) {
+        Registration registration = registrationRepository.findByStudentId(studentId)
+                .stream()
+                .filter(reg -> reg.getCourse().getId().equals(courseId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Registration not found"));
+
+        registrationRepository.delete(registration);
+    }
+
+    public int getStudentCredits(@NonNull Long studentId) {
         return registrationRepository.findByStudentId(studentId)
                 .stream()
                 .mapToInt(reg -> reg.getCourse().getCredits())

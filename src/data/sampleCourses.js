@@ -151,3 +151,4 @@ export const sampleCourses = [
     description: 'Operating system concepts and design principles.'
   }
 ];
+

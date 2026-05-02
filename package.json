@@ -1,0 +1,29 @@
+{
+    "name": "course-selection-platform",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "axios": "^1.5.0",
+        "firebase": "^10.9.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-router-dom": "^6.14.1"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.19",
+        "postcss": "^8.4.35",
+        "react-scripts": "5.0.1",
+        "tailwindcss": "^3.4.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "browserslist": [
+        "last 2 versions",
+        "not dead",
+        "not op_mini all"
+    ]
+}

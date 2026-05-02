@@ -1,0 +1,23 @@
+
+> course-selection-platform@1.0.0 build
+> react-scripts build
+
+(node:16860) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Creating an optimized production build...
+Failed to compile.
+
+[eslint] 
+src\components\Header.js
+Syntax error: Unexpected token (129:35) (129:35)
+
+src\context\AuthContext.js
+Syntax error: Unexpected token (21:19) (21:19)
+
+src\context\CourseContext.js
+Syntax error: Unexpected token (30:27) (30:27)
+
+src\pages\Dashboard.jsx
+Syntax error: Unexpected token (180:7) (180:7)
+
+

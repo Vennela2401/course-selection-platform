@@ -74,3 +74,4 @@ export const getAllConflicts = (courses) => {
   
   return conflicts;
 };
+

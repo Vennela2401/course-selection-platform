@@ -125,7 +125,7 @@ exports.googleAuth = async(req, res) => {
         res.json({
             message: 'Google authentication successful',
             token: authToken,
-            user: { id: user.id, name: user.name, email: user.email }
+            user: { id: user.id, name: user.name, email: user.email, role: user.role || 'STUDENT' }
         });
     } catch (err) {
         console.error('Google auth error:', err);

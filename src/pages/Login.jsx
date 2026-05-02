@@ -1,73 +1,76 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  sendPasswordResetEmail,   // ✅ ADDED
-} from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import React, { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
+  const {
+    user,
+    loading,
+    login,
+    register,
+    googleLogin,
+    forgotPassword,
+    error,
+    setError,
+  } = useAuth();
 
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Student");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingLocal, setLoadingLocal] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [user, loading, navigate]);
 
   const resetForm = () => {
     setEmail("");
     setPassword("");
-    setError("");
+    setError(null);
   };
 
-  const redirectByRole = () => {
-    if (role === "Admin") {
+  const redirectByRole = (roleFromUser) => {
+    const normalizedRole = (roleFromUser || role || "student").toLowerCase();
+    if (normalizedRole === "admin") {
       navigate("/admin");
     } else {
       navigate("/dashboard");
     }
   };
 
-  /* ===============================
-     LOGIN / SIGNUP
-  ================================ */
   const handleContinue = async () => {
-    setError("");
-    setLoading(true);
-
+    setError(null);
+    setLoadingLocal(true);
     try {
       if (isLoginMode) {
-        await signInWithEmailAndPassword(auth, email, password);
-        redirectByRole();
+        const response = await login({ email, password });
+        const roleFromUser = response.data && response.data.user && response.data.user.role;
+        redirectByRole(roleFromUser);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully. Please login.");
-        setIsLoginMode(true);
-        resetForm();
+        const response = await register({
+          email,
+          password,
+          role,
+          name: email.split("@")[0],
+        });
+        const roleFromUser = response.data && response.data.user && response.data.user.role;
+        redirectByRole(roleFromUser);
       }
     } catch (err) {
-      if (err.code === "auth/email-already-in-use") {
-        setError("Account already exists. Please login.");
-        setIsLoginMode(true);
-      } else if (err.code === "auth/wrong-password") {
-        setError("Incorrect password.");
-      } else if (err.code === "auth/user-not-found") {
-        setError("No account found. Please sign up.");
-      } else {
-        setError(err.message);
-      }
+      // error is handled in AuthContext
     } finally {
-      setLoading(false);
+      setLoadingLocal(false);
     }
   };
 
-  /* ===============================
-     FORGOT PASSWORD (NEW)
-  ================================ */
   const handleForgotPassword = async () => {
     if (!email) {
       setError("Please enter your email first.");
@@ -75,41 +78,38 @@ function Login() {
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      await forgotPassword(email);
       alert("Password reset link sent to your email 📧");
     } catch (err) {
-      setError(err.message);
+      // error is handled in auth context
     }
   };
 
-  /* ===============================
-     GOOGLE LOGIN
-  ================================ */
   const handleGoogle = async () => {
-    setError("");
-    setLoading(true);
-
+    setError(null);
+    setLoadingLocal(true);
     try {
-      await signInWithPopup(auth, googleProvider);
-      redirectByRole();
+      const googleUser = await googleLogin();
+      redirectByRole(googleUser.role);
     } catch (err) {
-      setError(err.message);
+      // error is handled in auth context
     } finally {
-      setLoading(false);
+      setLoadingLocal(false);
     }
   };
+
+  if (!loading && user) {
+    return <Navigate to={user.role === "admin" ? "/admin" : "/dashboard"} replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-100">
-
         <h2 className="text-2xl font-bold text-indigo-600 mb-2">
           Course Selection Platform
         </h2>
 
-        <p className="text-gray-600 mb-6">
-          Secure student course registration
-        </p>
+        <p className="text-gray-600 mb-6">Secure student course registration</p>
 
         {error && (
           <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
@@ -117,11 +117,8 @@ function Login() {
           </p>
         )}
 
-        {/* Email */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
           <input
             type="email"
             value={email}
@@ -130,11 +127,8 @@ function Login() {
           />
         </div>
 
-        {/* Password */}
         <div className="mb-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
           <input
             type="password"
             value={password}
@@ -143,7 +137,6 @@ function Login() {
           />
         </div>
 
-        {/* ✅ FORGOT PASSWORD ADDED HERE */}
         {isLoginMode && (
           <div className="text-right mb-4">
             <button
@@ -156,25 +149,24 @@ function Login() {
           </div>
         )}
 
-        {/* Role */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Login as
-          </label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white"
-          >
-            <option value="Student">Student</option>
-            <option value="Admin">Admin</option>
-          </select>
-        </div>
+        {!isLoginMode && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Register as</label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white"
+            >
+              <option value="Student">Student</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+        )}
 
-        {/* Continue */}
         <button
+          type="button"
           onClick={handleContinue}
-          disabled={loading}
+          disabled={loadingLocal}
           className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 mb-4"
         >
           {isLoginMode ? "Login" : "Register"}
@@ -182,32 +174,30 @@ function Login() {
 
         <div className="text-center text-gray-400 mb-4">or</div>
 
-        {/* Google */}
         <button
+          type="button"
           onClick={handleGoogle}
-          disabled={loading}
+          disabled={loadingLocal}
           className="w-full border border-gray-300 py-2.5 rounded-lg hover:bg-gray-50"
         >
           Continue with Google
         </button>
 
-        {/* Toggle */}
         <p className="text-center mt-6">
           <button
+            type="button"
             onClick={() => {
               setIsLoginMode(!isLoginMode);
               resetForm();
             }}
             className="text-indigo-600 hover:underline text-sm font-medium"
           >
-            {isLoginMode
-              ? "Don't have an account? Sign up"
-              : "Already a user? Login"}
+            {isLoginMode ? "Don't have an account? Sign up" : "Already a user? Login"}
           </button>
         </p>
 
         <p className="text-xs text-gray-500 text-center mt-6">
-          🔒 Your login is protected with Firebase Authentication.
+          🔒 Your login is now connected to the backend API.
         </p>
       </div>
     </div>
@@ -215,3 +205,4 @@ function Login() {
 }
 
 export default Login;
+

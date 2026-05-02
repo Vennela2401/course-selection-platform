@@ -1,102 +1,94 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auth, db } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { useAuth } from "./AuthContext";
 import {
-    collection,
-    doc,
-    setDoc,
-    deleteDoc,
-    getDocs,
-} from "firebase/firestore";
+    getCourses,
+    getStudentSchedule,
+    registerStudentCourse,
+    unregisterStudentCourse,
+    addCourseToCatalog,
+    deleteCourseFromCatalog as deleteCourseCatalogApi,
+} from "../api";
 
 const CourseContext = createContext();
 
 export const useCourses = () => useContext(CourseContext);
 
 export const CourseProvider = ({ children }) => {
+    const { user } = useAuth();
     const [courses, setCourses] = useState([]);
-    const [user, setUser] = useState(null);
+    const [availableCourses, setAvailableCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    /* ===============================
-       AUTH LISTENER
-    ================================ */
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async(currentUser) => {
-            setUser(currentUser);
-            setCourses([]);
+        const loadCourses = async() => {
             setLoading(true);
+            try {
+                const courseResponse = await getCourses();
+                setAvailableCourses(courseResponse.data || []);
 
-            if (!currentUser) {
+                if (user && user.id) {
+                    const scheduleResponse = await getStudentSchedule(user.id);
+                    setCourses(scheduleResponse.data || []);
+                } else {
+                    setCourses([]);
+                }
+            } catch (err) {
+                console.error(err);
+                setError((err && err.response && err.response.data) || err.message);
+            } finally {
                 setLoading(false);
-                return;
             }
+        };
 
-            // Load registered courses from Firestore
-            const snapshot = await getDocs(
-                collection(db, "users", currentUser.uid, "registeredCourses")
-            );
+        loadCourses();
+    }, [user]);
 
-            const loadedCourses = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data(),
-            }));
-
-            setCourses(loadedCourses);
-            setLoading(false);
-        });
-
-        return () => unsubscribe();
-    }, []);
-
-    /* ===============================
-       ADD COURSE (SAVE TO FIRESTORE)
-    ================================ */
     const addCourse = async(course) => {
-        if (!user) return;
+        if (!user || !user.id) {
+            throw new Error("Please login to register for courses.");
+        }
 
-        const courseRef = doc(
-            db,
-            "users",
-            user.uid,
-            "registeredCourses",
-            course.id.toString()
-        );
-
-        await setDoc(courseRef, course);
-
+        await registerStudentCourse(user.id, course.id);
         setCourses((prev) => [...prev, course]);
     };
 
-    /* ===============================
-       REMOVE COURSE (DELETE FROM FIRESTORE)
-    ================================ */
-    const removeCourse = async(id) => {
-        if (!user) return;
+    const removeCourse = async(courseId) => {
+        if (!user || !user.id) {
+            throw new Error("Please login to unregister from courses.");
+        }
 
-        const courseRef = doc(
-            db,
-            "users",
-            user.uid,
-            "registeredCourses",
-            id.toString()
-        );
+        await unregisterStudentCourse(user.id, courseId);
+        setCourses((prev) => prev.filter((c) => c.id !== courseId));
+    };
 
-        await deleteDoc(courseRef);
+    const createCourse = async(course) => {
+        const response = await addCourseToCatalog(course);
+        setAvailableCourses((prev) => [...prev, response.data]);
+        return response.data;
+    };
 
-        setCourses((prev) => prev.filter((c) => c.id !== id));
+    const deleteCourseFromCatalog = async(courseId) => {
+        await deleteCourseCatalogApi(courseId);
+        setAvailableCourses((prev) => prev.filter((c) => c.id !== courseId));
+        setCourses((prev) => prev.filter((c) => c.id !== courseId));
     };
 
     return ( <
         CourseContext.Provider value = {
             {
                 courses,
+                availableCourses,
                 addCourse,
                 removeCourse,
+                createCourse,
+                deleteCourseFromCatalog,
                 loading,
+                error,
             }
         } >
         {!loading && children } <
         /CourseContext.Provider>
     );
 };
+

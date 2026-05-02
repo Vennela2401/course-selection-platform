@@ -33,3 +33,4 @@ export const facultyMembers = [
     image: 'https://via.placeholder.com/200x200?text=Dr.+Chen'
   }
 ];
+

@@ -1,7 +1,6 @@
 import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { CourseProvider } from "./context/CourseContext";
 
 /* Pages */
 import Home from "./pages/Home";
@@ -18,114 +17,54 @@ import AdminDashboard from "./pages/AdminDashboard";
 /* Components */
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ProtectedRoute, {
-    ProtectedAdminRoute,
-} from "./components/ProtectedRoute";
+import ProtectedRoute, { ProtectedAdminRoute } from "./components/ProtectedRoute";
 
 function App() {
     return ( <
-        CourseProvider >
-        <
-        Router >
-        <
-        Header / >
+            Router >
+            <
+            Header / >
+            <
+            Routes > { /* PUBLIC ROUTES */ } <
+            Route path = "/"
+            element = { < Home / > }
+            /> <
+            Route path = "/login"
+            element = { < Login / > }
+            /> <
+            Route path = "/about"
+            element = { < About / > }
+            />
 
-        <
-        Routes > { /* ========== PUBLIC ROUTES ========== */ } <
-        Route path = "/"
-        element = { < Home / > }
-        /> <
-        Route path = "/login"
-        element = { < Login / > }
-        /> <
-        Route path = "/about"
-        element = { < About / > }
-        />
+            { /* STUDENT PROTECTED ROUTES */ } <
+            Route path = "/dashboard"
+            element = { < ProtectedRoute > < Dashboard / > < /ProtectedRoute>} / >
+                <
+                Route path = "/profile"
+                element = { < ProtectedRoute > < Profile / > < /ProtectedRoute>} / >
+                    <
+                    Route path = "/courses"
+                    element = { < ProtectedRoute > < Courses / > < /ProtectedRoute>} / >
+                        <
+                        Route path = "/schedule"
+                        element = { < ProtectedRoute > < Schedule / > < /ProtectedRoute>} / >
 
-        { /* ========== STUDENT PROTECTED ROUTES ========== */ } <
-        Route path = "/dashboard"
-        element = { <
-            ProtectedRoute >
-            <
-            Dashboard / >
-            <
-            /ProtectedRoute>
-        }
-        />
+                            { /* ADMIN PROTECTED ROUTES */ } <
+                            Route path = "/admin"
+                            element = { < ProtectedAdminRoute > < Admin / > < /ProtectedAdminRoute>} / >
+                                <
+                                Route path = "/admin-dashboard"
+                                element = { < ProtectedAdminRoute > < AdminDashboard / > < /ProtectedAdminRoute>} / >
+                                    <
+                                    Route path = "/admin-profile"
+                                    element = { < ProtectedAdminRoute > < AdminProfile / > < /ProtectedAdminRoute>} / >
+                                        <
+                                        /Routes> <
+                                        Footer / >
+                                        <
+                                        /Router>
+                                    );
+                                }
 
-        <
-        Route path = "/profile"
-        element = { <
-            ProtectedRoute >
-            <
-            Profile / >
-            <
-            /ProtectedRoute>
-        }
-        />
+                                export default App;
 
-        <
-        Route path = "/courses"
-        element = { <
-            ProtectedRoute >
-            <
-            Courses / >
-            <
-            /ProtectedRoute>
-        }
-        />
-
-        <
-        Route path = "/schedule"
-        element = { <
-            ProtectedRoute >
-            <
-            Schedule / >
-            <
-            /ProtectedRoute>
-        }
-        />
-
-        { /* ========== ADMIN PROTECTED ROUTES ========== */ } <
-        Route path = "/admin"
-        element = { <
-            ProtectedAdminRoute >
-            <
-            Admin / >
-            <
-            /ProtectedAdminRoute>
-        }
-        />
-
-        <
-        Route path = "/admin-dashboard"
-        element = { <
-            ProtectedAdminRoute >
-            <
-            AdminDashboard / >
-            <
-            /ProtectedAdminRoute>
-        }
-        />
-
-        <
-        Route path = "/admin-profile"
-        element = { <
-            ProtectedAdminRoute >
-            <
-            AdminProfile / >
-            <
-            /ProtectedAdminRoute>
-        }
-        /> <
-        /Routes>
-
-        <
-        Footer / >
-        <
-        /Router> <
-        /CourseProvider>
-    );
-}
-
-export default App;

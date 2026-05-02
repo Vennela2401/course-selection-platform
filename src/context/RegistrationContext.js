@@ -58,3 +58,4 @@ export const RegistrationProvider = ({ children }) => {
     </RegistrationContext.Provider>
   );
 };
+

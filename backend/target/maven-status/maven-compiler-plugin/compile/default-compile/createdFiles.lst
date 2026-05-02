@@ -1,6 +1,7 @@
 com\app\course\model\Registration.class
 com\app\course\service\RegistrationService.class
 com\app\course\config\CorsConfig.class
+com\app\course\config\DataLoader.class
 com\app\course\service\UserService.class
 com\app\course\controller\AuthController.class
 com\app\course\controller\RegistrationController.class

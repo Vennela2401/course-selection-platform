@@ -82,3 +82,4 @@ const CourseCard = ({ course, showRegisterButton = true }) => {
 };
 
 export default CourseCard;
+

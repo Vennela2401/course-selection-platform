@@ -56,3 +56,4 @@ export const galleryImages = [
     category: 'Pages'
   }
 ];
+

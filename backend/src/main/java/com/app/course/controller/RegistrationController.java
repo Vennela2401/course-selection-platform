@@ -5,6 +5,7 @@ import com.app.course.model.Registration;
 import com.app.course.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerCourse(@RequestParam Long studentId, @RequestParam Long courseId) {
+    public ResponseEntity<?> registerCourse(@RequestParam @NonNull Long studentId, @RequestParam @NonNull Long courseId) {
         try {
             Registration reg = registrationService.registerForCourse(studentId, courseId);
             return ResponseEntity.ok(reg);
@@ -25,13 +26,23 @@ public class RegistrationController {
         }
     }
 
+    @DeleteMapping("/register")
+    public ResponseEntity<?> unregisterCourse(@RequestParam @NonNull Long studentId, @RequestParam @NonNull Long courseId) {
+        try {
+            registrationService.unregisterFromCourse(studentId, courseId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<Course>> getStudentSchedule(@PathVariable Long studentId) {
+    public ResponseEntity<List<Course>> getStudentSchedule(@PathVariable @NonNull Long studentId) {
         return ResponseEntity.ok(registrationService.getStudentSchedule(studentId));
     }
 
     @GetMapping("/credits/{studentId}")
-    public ResponseEntity<Integer> getStudentCredits(@PathVariable Long studentId) {
+    public ResponseEntity<Integer> getStudentCredits(@PathVariable @NonNull Long studentId) {
         return ResponseEntity.ok(registrationService.getStudentCredits(studentId));
     }
 
